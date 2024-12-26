@@ -1,0 +1,21 @@
+# Игнорируем папку node_modules
+node_modules/
+
+dist/
+zipped/
+
+*.env
+
+.vscode/
+.idea/
+
+package-lock.json
+
+*.log
+*.tmp
+
+.DS_Store
+
+Thumbs.db
+
+*.iml

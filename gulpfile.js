@@ -8,33 +8,32 @@ import htmlmin from 'gulp-htmlmin';
 import prettify from 'gulp-prettify';
 import browserSync from 'browser-sync';
 import imagemin from 'gulp-imagemin';
+import imageminMozjpeg from 'imagemin-mozjpeg';
+import imageminPngquant from 'imagemin-pngquant';
 import stringify from 'json-stringify-pretty-compact';
+import zip from 'gulp-zip';
 
-import Handlebars from './src/helpers/handlebars-helpers.js'; // Импортируем Handlebars с зарегистрированными хелперами
-
+import Handlebars from './src/helpers/handlebars-helpers.js';
 
 const { series, parallel, watch, src, dest } = gulp;
 const browserSyncInstance = browserSync.create();
 
-// Чтение данных из JSON
 function getJsonData() {
-  // return JSON.parse(fs.readFileSync('./src/data/data.json'));
-
-  // Чтение данных из обоих файлов
   const dataJson = JSON.parse(fs.readFileSync('./src/data/data.json'));
   const stylesJson = JSON.parse(fs.readFileSync('./src/data/styles.json'));
 
-  // Объединение данных из двух файлов в один объект
   return { 
     ...dataJson,
-    ...stylesJson,  // Можно добавить данные styles в объект с ключом "styles"
+    ...stylesJson,
   };
 }
 
-// Обработка изображений
 function processImages() {
-  return src('src/assets/images/*')
-    .pipe(imagemin())
+  return src('src/assets/images/*', { encoding: false }) 
+    .pipe(imagemin([
+      imageminMozjpeg({ quality: 85, progressive: true }),
+      imageminPngquant({ quality: [0.7, 0.9] })
+    ]))
     .pipe(dest('dist/images'));
 }
 
@@ -46,7 +45,7 @@ function extractSassVariables(filePath) {
   let match;
 
   while ((match = variableRegex.exec(scssContent)) !== null) {
-    const variableName = match[1].replace('$', '').trim();  // Убираем $ из имени переменной
+    const variableName = match[1].replace('$', '').trim(); 
     const variableValue = match[2].replace('$', '').trim();
     variables[variableName] = variableValue;
   }
@@ -70,7 +69,6 @@ async function convertScssVariablesToJson() {
   return true
 }
 
-// Компиляция шаблонов
 function compileTemplates() {
   const templateName = getJsonData().templateName;
 
@@ -82,21 +80,49 @@ function compileTemplates() {
     }))
     .on('error', console.error.bind(console))
     .pipe(mjml())
-    .pipe(rename('email-preview.html'))
+    .pipe(rename((path) => {
+      path.basename += '-preview'; 
+      path.extname = '.html'; 
+    }))
+    .pipe(prettify({ indent_size: 2 }))
+    .pipe(dest('dist/preview')) 
     .pipe(htmlmin({ collapseWhitespace: true, removeComments: true }))
-    .pipe(rename('index.html'))
+    .pipe(rename((path) => {
+      path.basename = path.basename.replace('-preview', '')
+      path.extname = '.html';
+    }))
     .pipe(dest('dist'))
     .pipe(browserSyncInstance.stream());
 }
 
-// Применение prettify только к файлам, которые идут в папку dist/preview
-function prettifyPreview() {
-  return src('dist/preview/email-preview.html')
+function compileAllTemplates() {
+  return src('src/templates/*.hbs')
+    .pipe(data(getJsonData))
+    .pipe(handlebars({}, {
+      batch: ['src/templates/partials', 'src/templates/styles'],
+      helpers: Handlebars.helpers
+    }))
+    .on('error', console.error.bind(console))
+    .pipe(mjml())
+    .pipe(rename((path) => {
+      path.basename += '-preview';
+      path.extname = '.html';
+    }))
     .pipe(prettify({ indent_size: 2 }))
-    .pipe(dest('dist/preview'));
+    .pipe(dest('dist/preview'))
+    .pipe(htmlmin({ collapseWhitespace: true, removeComments: true }))
+    .pipe(rename((path) => {
+      path.basename = path.basename.replace('-preview', '')
+      path.extname = '.html';
+    }))
+    .pipe(dest('dist'))
+    .pipe(browserSyncInstance.stream());
 }
 
-// Запуск сервера
+function prettifyFiles() {
+  return prettify({ indent_size: 2 });
+}
+
 function serve() {
   browserSyncInstance.init({
     server: {
@@ -108,19 +134,22 @@ function serve() {
   });
 }
 
-// Слежение за изменениями
+function zipFiles() {
+  return src('dist/**/*') 
+    .pipe(zip('email-templates-zipped.zip')) 
+    .pipe(dest('zipped')); 
+}
+
 function watchFiles() {
-  watch('src/templates/**/*.{hbs,mjml}', series(compileTemplates));  // Обрабатываем .hbs и .html файлы
+  watch('src/templates/**/*.{hbs,mjml}', series(compileTemplates)); 
   watch('dist/**/*.html').on('change', browserSyncInstance.reload);
   watch('src/images/*', series(processImages));
   watch('src/data/**/*.json').on('change', series(compileTemplates));
-  watch('dist/preview/email-preview.html', series(prettifyPreview)); // Применяем prettify только к preview файлам
-  watch('src/assets/styles/_variables.scss', series(convertScssVariablesToJson)); // Слежение за изменениями в SCSS
+  watch('src/assets/styles/_variables.scss', series(convertScssVariablesToJson)); 
 }
 
-// Задача по умолчанию
 const defaultTask = series(
-  convertScssVariablesToJson,  // Добавляем задачу конвертации SCSS переменных в JSON
+  convertScssVariablesToJson, 
   compileTemplates,
   parallel(watchFiles, serve, processImages)
 );
@@ -128,9 +157,11 @@ const defaultTask = series(
 export {
   processImages,
   compileTemplates,
-  prettifyPreview,
+  compileAllTemplates,
+  prettifyFiles,
   serve,
   watchFiles,
-  convertScssVariablesToJson,  // Экспортируем задачу
+  convertScssVariablesToJson,
+  zipFiles,
   defaultTask as default,
 };
