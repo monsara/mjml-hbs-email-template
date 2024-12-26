@@ -1,0 +1,41 @@
+{ 
+  "templateName": "index.hbs",
+  "head": {
+    "title": "Prematch",
+    "preview": "Welcome to Prematch"
+  },
+  "recipientName": "Світлано",
+  "message": "This is a dynamic Handlebars template!",
+   "cards": [
+    {
+      "image": "https://via.placeholder.com/150",
+      "title": "Карточка 1",
+      "description": "Описание карточки 1",
+      "buttonText": "Подробнее"
+    },
+    {
+      "image": "https://via.placeholder.com/150",
+      "title": "Карточка 2",
+      "description": "Описание карточки 2",
+      "buttonText": "Смотреть"
+    },
+    {
+      "image": "https://via.placeholder.com/150",
+      "title": "Карточка 3",
+      "description": "Описание карточки 3",
+      "buttonText": "Перейти"
+    },
+    {
+      "image": "https://via.placeholder.com/150",
+      "title": "Карточка 4",
+      "description": "Описание карточки 4",
+      "buttonText": "Действие"
+    },
+    {
+      "image": "https://via.placeholder.com/150",
+      "title": "Карточка 5",
+      "description": "Описание карточки 5",
+      "buttonText": "Записаться"
+    }
+  ]
+}

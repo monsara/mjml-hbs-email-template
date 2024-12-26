@@ -1,0 +1,25 @@
+<mj-head>
+  <mj-title>{{ head.title }}</mj-title>
+  <mj-preview>{{ head.preview }}</mj-preview>
+  <mj-font 
+    name="Raleway" 
+    href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" 
+  />
+
+  <mj-attributes>
+    <mj-all 
+      font-family="{{base-font-family}}" 
+      font-size="{{base-font-size}}" 
+      color="{{text-base-color}}" 
+      line-height="{{base-line-height}}" 
+      padding="0" 
+    />
+    <mj-breakpoint width="480px" />
+    {{> _classes }}
+  </mj-attributes>
+
+  <!-- For inline styles: Use this block to define styles that will be inlined into the email. -->
+  <mj-style inline="inline"></mj-style>
+  <!-- For global styles: Use this block to define styles applied via <style> tags in the email head. -->
+  <mj-style></mj-style>
+</mj-head>

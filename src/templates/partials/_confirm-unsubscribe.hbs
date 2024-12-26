@@ -1,0 +1,20 @@
+<mj-section 
+  padding="{{inline-fluid-section-padding}}"
+  background-color="{{email-bg-color}}"
+>
+  <mj-column>
+    <mj-text mj-class="text text-base padding-bottom">
+      Ти читаєш цього листа, тому що підписаний(-а) на розсилку
+      від сайту PreMatch.ua. Щоб відмовитись від листів з бонусами
+      та важливими акціями, тисни тут.
+    </mj-text>
+    {{#if (default showButton true)}}
+      {{> _button
+        mj-class="button padding-bottom" 
+        button-text="Підтвердити" 
+        button-link="https://prematch.vn.ua/"
+        align="left"
+      }}
+    {{/if}}
+  </mj-column>
+</mj-section>
