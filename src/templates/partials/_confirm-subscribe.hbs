@@ -1,0 +1,26 @@
+<mj-section 
+  padding="{{inline-fluid-section-padding}}"
+  background-color="{{email-bg-color}}"
+>
+  <mj-column>
+    <mj-text mj-class="text text-base padding-bottom">
+      Натисніть посилання нижче, щоб підтвердити свою електронну адресу
+    </mj-text>
+   
+    {{#if (default showButton true)}}
+      {{> _button
+        button-text=button-text 
+        width="170px" 
+        mj-class="button padding-bottom" 
+        button-link="https://prematch.vn.ua/"
+        align="left"
+      }}
+    {{/if}}
+
+    <mj-text mj-class="text text-base padding-bottom">
+      Якщо ви отримали цей електронний лист помилково, 
+      просто видаліть його. Ви не будете підписані, 
+      якщо не натиснете посилання для підтвердження вище.
+    </mj-text>
+  </mj-column>
+</mj-section>

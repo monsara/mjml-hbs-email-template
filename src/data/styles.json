@@ -18,7 +18,7 @@
   "rounded-bottom-border-radius": "0 0 20px 20px",
   "fluid-section-padding": "7%",
   "inline-fluid-section-padding": "0 7%",
-  "base-font-family": "'Raleway', Helvetica, Arial, sans-serif",
+  "base-font-family": "Raleway, Helvetica, Arial, sans-serif",
   "base-font-size": "16px",
   "base-line-height": "24px",
   "base-button-bg-color": "#CFFF27",

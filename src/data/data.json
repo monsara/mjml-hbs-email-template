@@ -1,5 +1,5 @@
 { 
-  "templateName": "index.hbs",
+  "templateName": "greeting-template-4.hbs",
   "head": {
     "title": "Prematch",
     "preview": "Welcome to Prematch"

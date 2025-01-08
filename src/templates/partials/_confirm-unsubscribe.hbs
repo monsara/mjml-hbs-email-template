@@ -4,14 +4,25 @@
 >
   <mj-column>
     <mj-text mj-class="text text-base padding-bottom">
-      Ти читаєш цього листа, тому що підписаний(-а) на розсилку
-      від сайту PreMatch.ua. Щоб відмовитись від листів з бонусами
-      та важливими акціями, тисни тут.
+      Якщо ви не надсилали запит на цю зміну, можете сміливо 
+      ігнорувати цей електронний лист.
     </mj-text>
+    <mj-spacer height="{{spacing-x-small}}" />
+    <mj-text mj-class="text text-base padding-bottom">
+      Ви отримали цей електронний лист, оскільки надіслали 
+      запит на скидання пароля для свого облікового запису
+    </mj-text>
+    <mj-spacer height="{{spacing-x-small}}" />
+    <mj-text mj-class="text text-base padding-bottom">
+      Щоб вибрати новий пароль і завершити запит, перейдіть 
+      за посиланням нижче:
+    </mj-text>
+    
     {{#if (default showButton true)}}
       {{> _button
+        button-text=button-text 
+        width="170px" 
         mj-class="button padding-bottom" 
-        button-text="Підтвердити" 
         button-link="https://prematch.vn.ua/"
         align="left"
       }}
